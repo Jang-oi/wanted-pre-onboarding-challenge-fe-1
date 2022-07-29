@@ -1,11 +1,12 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Button, Container, TextField, Typography} from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate, useLocation} from "react-router-dom";
 import axios from "axios";
 
 const AuthTemplate = ({type}) => {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const [inputs, setInputs] = useState({
         email          : '',
         password       : '',
@@ -14,7 +15,6 @@ const AuthTemplate = ({type}) => {
     });
 
     const {email, password, emailDisable, passwordDisable} = inputs;
-    const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
     const headerText = (type === 'create') ? '회원가입' : '로그인';
 
     /**
@@ -25,6 +25,7 @@ const AuthTemplate = ({type}) => {
     const onInputChange = (e) => {
         const {name, value} = e.target;
         const disable = {emailDisable, passwordDisable};
+        const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 
         if (name === 'email') disable.emailDisable = regEmail.test(value);
         else disable.passwordDisable = value.length >= 8;
@@ -46,7 +47,7 @@ const AuthTemplate = ({type}) => {
             const response = await axios.post(`/users/${type}`, {email, password});
             const {message, token} = response.data;
             alert(message);
-            if (type === 'create') navigate('/signUp');
+            if (type === 'create') navigate('/signUp', {state: {email}});
             if (type === 'login') {
                 navigate('/');
                 localStorage.setItem('token', token);
@@ -56,6 +57,28 @@ const AuthTemplate = ({type}) => {
             alert(errorMsg);
         }
     }
+
+    /**
+     * 로그인 페이지 일 경우에 회원가입 버튼 보이게 하는 함수
+     * @returns {JSX.Element}
+     */
+    const signInDisable = () => {
+        return <Typography variant="subtitle1"><Link style={{textDecoration: 'none'}} to="/signIn">회원 가입</Link></Typography>
+    };
+
+    useEffect(() => {
+        if (localStorage.getItem('token')) navigate('/');
+        const emailState = location.state?.email;
+        if (emailState) {
+            setInputs(() => {
+                return {
+                    ...inputs,
+                    email: emailState,
+                    emailDisable : true
+                }
+            });
+        }
+    }, [location.state?.email, navigate]);
 
     return (
         <Container component="main" maxWidth="xs">
@@ -70,7 +93,7 @@ const AuthTemplate = ({type}) => {
                 <Typography component="h1" variant="h5">
                     {headerText}
                 </Typography>
-                <Box component="form" noValidate sx={{mt: 1}}>
+                <Box component="form" onSubmit={onSubmit} noValidate sx={{mt: 1}}>
                     <TextField
                         margin="normal"
                         fullWidth
@@ -81,6 +104,7 @@ const AuthTemplate = ({type}) => {
                         autoFocus
                         value={email}
                         onChange={onInputChange}
+                        helperText="이메일 형식에 맞춰서 입력 부탁드립니다."
                     />
                     <TextField
                         margin="normal"
@@ -92,6 +116,7 @@ const AuthTemplate = ({type}) => {
                         autoComplete="current-password"
                         value={password}
                         onChange={onInputChange}
+                        helperText="비밀번호는 8자리 이상 입력 부탁드립니다."
                     />
                     <Button
                         fullWidth
@@ -102,10 +127,11 @@ const AuthTemplate = ({type}) => {
                     >
                         {headerText}
                     </Button>
+                    {type === 'login' && signInDisable()}
                 </Box>
             </Box>
         </Container>
     );
 }
 
-export default AuthTemplate;
+export default React.memo(AuthTemplate);
