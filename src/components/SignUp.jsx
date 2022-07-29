@@ -1,11 +1,8 @@
 import React from "react";
+import AuthTemplate from "./AuthTemplate";
 
 const SignUp = () => {
-    return (
-        <div>
-
-        </div>
-    );
+    return <AuthTemplate type='login'/>
 }
 
 export default SignUp;
