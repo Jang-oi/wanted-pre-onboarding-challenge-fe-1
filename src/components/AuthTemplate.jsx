@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Button, Container, TextField, Typography} from "@mui/material";
 import {Link, useNavigate, useLocation} from "react-router-dom";
 import axios from "axios";
+import {token} from "../utils/common";
 
 const AuthTemplate = ({type}) => {
 
@@ -67,7 +68,7 @@ const AuthTemplate = ({type}) => {
     };
 
     useEffect(() => {
-        if (localStorage.getItem('token')) navigate('/');
+        if (token) navigate('/');
         const emailState = location.state?.email;
         if (emailState) {
             setInputs(() => {
