@@ -26,6 +26,10 @@ const TodoCreate = () => {
                 type: 'TODO_CREATE',
                 todo: response.data.data
             });
+            setTodoInputs({
+                title  : '',
+                content: ''
+            });
         } catch (e) {
             const errorMsg = e.response.data.details;
             alert(errorMsg);
@@ -41,7 +45,7 @@ const TodoCreate = () => {
         setTodoInputs({
             ...todoInputs,
             [name]: value
-        })
+        });
     }
 
     return (
@@ -49,8 +53,8 @@ const TodoCreate = () => {
             <TextField id="standard-basic" label="TITLE" variant="standard" style={{width: '100%'}}
                        onChange={onTodoChange} name="title" value={title}/>
             <TextField id="standard-basic" label="CONTENT" variant="standard" style={{width: '100%'}}
-                       onChange={onTodoChange} name="content" value={content}/>
-            <Button variant="contained" endIcon={<AddIcon/>} onClick={onTodoAdd} style={{width: '20%'}}>ADD</Button>
+                       onChange={onTodoChange} name="content" value={content} multiline={true}/>
+            <Button variant="contained" endIcon={<AddIcon/>} onClick={onTodoAdd} style={{width: '20%', maxHeight:'50px'}}>ADD</Button>
         </Stack>
     );
 }

@@ -1,15 +1,38 @@
 import {createContext, useReducer, useContext} from "react";
 
-const initialTodos = [];
+const initialTodos = {
+    todos: [],
+    modal: {
+        open: false,
+        id  : '',
+    },
+};
 
 const todoReducer = (state, action) => {
     switch (action.type) {
         case 'TODO_SET' :
-            return action.todos;
+            return {
+                ...state,
+                todos: action.todos
+            };
         case 'TODO_CREATE' :
-            return state.concat(action.todo);
+            return {
+                ...state,
+                todos: state.todos.concat(action.todo)
+            };
         case 'TODO_REMOVE' :
-            return state.filter(todo => todo.id !== action.id);
+            return {
+                ...state,
+                todos: state.todos.filter(todo => todo.id !== action.id)
+            };
+        case 'TODO_DETAIL' :
+            return {
+                ...state,
+                modal: {
+                    open: action.open,
+                    id  : action.id
+                }
+            }
         default :
             throw new Error(`Unhandled action type : ${action.type}`);
     }
