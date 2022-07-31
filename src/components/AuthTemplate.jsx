@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Box, Button, Container, TextField, Typography} from "@mui/material";
 import {Link, useNavigate, useLocation} from "react-router-dom";
 import axios from "axios";
-import {token} from "../utils/common";
 
 const AuthTemplate = ({type}) => {
 
@@ -17,6 +16,7 @@ const AuthTemplate = ({type}) => {
 
     const {email, password, emailDisable, passwordDisable} = inputs;
     const headerText = (type === 'create') ? '회원가입' : '로그인';
+    const token = localStorage.getItem('token');
 
     /**
      * Input 값이 변경 될 때마다 진행되는 함수

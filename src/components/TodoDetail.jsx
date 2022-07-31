@@ -28,10 +28,9 @@ const TodoDetail = () => {
         title    : '',
         content  : '',
         createdAt: '',
-        updatedAt: '',
     });
 
-    const {title, content, createdAt, updatedAt} = todo;
+    const {title, content, createdAt} = todo;
 
     /**
      * 서버에서 받은 날짜를 문자열로 바꿔주는 함수
@@ -125,8 +124,7 @@ const TodoDetail = () => {
                            inputProps={{style: {minHeight: '300px', fontSize: 15}}}
                            onChange={onTodoInputChange}
                 />
-                <Typography variant="body2">생성 날짜 : {getDateString(createdAt)}</Typography>
-                <Typography variant="body2">수정 날짜 : {getDateString(updatedAt)}</Typography>
+                <Typography variant="body2">{getDateString(createdAt)}</Typography>
                 <div style={{float: 'right'}}>
                     <Button name={'edit'} onClick={onEdit}>수정</Button>
                     <Button name={'delete'} onClick={onEdit}>삭제</Button>
