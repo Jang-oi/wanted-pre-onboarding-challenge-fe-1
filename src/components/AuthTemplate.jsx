@@ -25,11 +25,11 @@ const AuthTemplate = ({type}) => {
      */
     const onInputChange = (e) => {
         const {name, value} = e.target;
-        const disable = {emailDisable, passwordDisable};
         const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-
-        if (name === 'email') disable.emailDisable = regEmail.test(value);
-        else disable.passwordDisable = value.length >= 8;
+        const disable = {
+            emailDisable   : regEmail.test(value),
+            passwordDisable: value.length >= 8
+        };
 
         setInputs({
             ...inputs,
@@ -64,7 +64,8 @@ const AuthTemplate = ({type}) => {
      * @returns {JSX.Element}
      */
     const signInDisable = () => {
-        return <Typography variant="subtitle1"><Link style={{textDecoration: 'none'}} to="/signIn">회원 가입</Link></Typography>
+        return <Typography variant="subtitle1"><Link style={{textDecoration: 'none'}} to="/signIn">회원
+            가입</Link></Typography>
     };
 
     useEffect(() => {
@@ -74,8 +75,8 @@ const AuthTemplate = ({type}) => {
             setInputs(() => {
                 return {
                     ...inputs,
-                    email: emailState,
-                    emailDisable : true
+                    email       : emailState,
+                    emailDisable: true
                 }
             });
         }
